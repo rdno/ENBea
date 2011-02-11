@@ -60,6 +60,7 @@ class enbea(QMainWindow):
     def _setupEpisodeList(self):
         self.episodeFiles = []
         self.episodeInfos = []
+        self.shows = set()
         self.model = EpisodeTableModel(self.episodeFiles)
         self.ui.episodeList.setModel(self.model)
         self.ui.episodeList.setColumnWidth(0, 200)
@@ -80,8 +81,11 @@ class enbea(QMainWindow):
                     '~')
         filename = path.basename(str(fullname))
         dirname = path.dirname(str(fullname))
+        info = self.parser.parse(filename)
         self.model.add(filename, dirname)
-        self.episodeInfos.append(self.parser.parse(filename))
+        self.episodeInfos.append(info)
+        if info[0]:
+            self.shows.add(info[0])
 
 
 if __name__ == "__main__":
