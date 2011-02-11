@@ -4,6 +4,7 @@ import sys
 from os import path
 from PyQt4.QtCore import *
 from PyQt4.QtGui import *
+from parser import EpisodeParser
 from main_ui import Ui_main
 
 class EpisodeTableModel(QAbstractTableModel):
@@ -41,6 +42,7 @@ class EpisodeTableModel(QAbstractTableModel):
             return True
         return False
 
+
 class enbea(QMainWindow):
     def __init__(self):
         QMainWindow.__init__(self)
@@ -54,7 +56,7 @@ class enbea(QMainWindow):
         self.connect(self.ui.browseBtn,
                      SIGNAL('clicked()'), self.openFileDialog)
         self._setupEpisodeList()
-
+        self.parser = EpisodeParser()
     def _setupEpisodeList(self):
         self.episodeFiles = []
         self.model = EpisodeTableModel(self.episodeFiles)
@@ -66,6 +68,7 @@ class enbea(QMainWindow):
                     '~')
         filename = path.basename(str(fullname))
         dirname = path.dirname(str(fullname))
+        print self.parser.parse(filename)
         self.model.add(filename, dirname)
 
 
