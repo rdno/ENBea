@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 import re
+from utils import camelCase
 
 class EpisodeParser(object):
     """Episode Parser"""
@@ -23,7 +24,7 @@ class EpisodeParser(object):
         for exp in self._parser_exps:
             match = exp.match(filename)
             if match:
-                return (match.group('showname').replace('.', ' '),
+                return (camelCase(match.group('showname').replace('.', ' ')),
                         match.group('season'),
                         match.group('episode'))
 
