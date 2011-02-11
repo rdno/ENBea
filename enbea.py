@@ -59,6 +59,26 @@ class enbea(QMainWindow):
         self._setupEpisodeList()
         self.parser = EpisodeParser()
         self.api_parser = IMDbApiParser()
+        self.connect(self.api_parser, SIGNAL('ShowListUpdated()'),
+                     self.updateNewNames)
+        self.connect(self.api_parser, SIGNAL('ShowNotFound()'),
+                     self.showNotFound)
+
+        self.ui.progressBar.hide()
+        self.ui.infoLabel.setText("Add files")
+        self.connect(self.api_parser.downloader,
+                     SIGNAL('downloadStarted(int, QString)'),
+                     self.startDownloadProgress)
+        self.connect(self.api_parser.downloader,
+                     SIGNAL('downloadProgress(int)'),
+                     self.updateDownloadProgress)
+    def updateDownloadProgress(self, bytes):
+        self.ui.progressBar.setValue(bytes)
+    def startDownloadProgress(self, total, show):
+        self.ui.infoLabel.setText("Downloading %s episode list" % show)
+        self.ui.progressBar.setMinimum(0)
+        self.ui.progressBar.setMaximum(total)
+        self.ui.progressBar.show()
     def _setupEpisodeList(self):
         self.episodeFiles = []
         self.episodeInfos = []
@@ -88,9 +108,13 @@ class enbea(QMainWindow):
         self.episodeInfos.append(info)
         if info[0]:
             self.shows.add(info[0])
-            if self.api_parser.addShow(info[0]):
-                self.updateNewNames()
+            self.api_parser.addShow(info[0])
+    def showNotFound(self):
+        self.ui.progressBar.hide()
+        self.ui.infoLabel.setText("Show list couldn't be parsed")
     def updateNewNames(self):
+        self.ui.progressBar.hide()
+        self.ui.infoLabel.setText("Download Successful!")
         mod = self.model
         for row in range(mod.rowCount()):
             index = mod.index(row, 1)
