@@ -5,6 +5,7 @@ from os import path
 from PyQt4.QtCore import *
 from PyQt4.QtGui import *
 from parsers import EpisodeParser
+from parsers import IMDbApiParser
 from main_ui import Ui_main
 
 class EpisodeTableModel(QAbstractTableModel):
@@ -33,7 +34,7 @@ class EpisodeTableModel(QAbstractTableModel):
         index = self.index(row, 0)
         self.beginInsertRows(index, row, row)
         self.insertRow(row) #implement ?
-        self.table_data.append((name, newname))
+        self.table_data.append([name, newname])
         self.endInsertRows()
     def setData(self, index, value, role=Qt.EditRole):
         if index.isValid() and role == Qt.EditRole:
@@ -57,6 +58,7 @@ class enbea(QMainWindow):
                      SIGNAL('clicked()'), self.openFileDialog)
         self._setupEpisodeList()
         self.parser = EpisodeParser()
+        self.api_parser = IMDbApiParser()
     def _setupEpisodeList(self):
         self.episodeFiles = []
         self.episodeInfos = []
@@ -82,11 +84,17 @@ class enbea(QMainWindow):
         filename = path.basename(str(fullname))
         dirname = path.dirname(str(fullname))
         info = self.parser.parse(filename)
-        self.model.add(filename, dirname)
+        self.model.add(filename, '')
         self.episodeInfos.append(info)
         if info[0]:
             self.shows.add(info[0])
-
+            if self.api_parser.addShow(info[0]):
+                self.updateNewNames()
+    def updateNewNames(self):
+        mod = self.model
+        for row in range(mod.rowCount()):
+            index = mod.index(row, 1)
+            mod.setData(index, self.api_parser.getEpisodeName(self.episodeInfos[row]))
 
 if __name__ == "__main__":
     app = QApplication(sys.argv)

@@ -1,5 +1,7 @@
 # -*- coding: utf-8 -*-
+import json
 import re
+import urllib
 from utils import camelCase
 
 class EpisodeParser(object):
@@ -30,3 +32,32 @@ class EpisodeParser(object):
 
         #if it doesn't match anything
         return ('', 0, 0)
+class IMDbApiParser(object):
+    """IMDbApi Parser (http://imdbapi.poromenos.org/)"""
+    def __init__(self):
+        """init"""
+        self._episodeList = {}
+
+    def getEpisodeList(self, show):
+        return self._episodeList[show]
+    def getEpisodeName(self, episodeInfo):
+        show = episodeInfo[0]
+        season = int(episodeInfo[1])
+        episode = int(episodeInfo[2])
+        if show:
+            return self._episodeList[show][(season, episode)]
+        return ""
+    def getShowList(self):
+        return self._episodeList.keys()
+    def addShow(self, show):
+        url = 'http://imdbapi.poromenos.org/js/?name=%s'
+        data = json.load(urllib.urlopen(url % show))
+        self._episodeList[show] = {}
+        if data or not 'show' in data:
+            episodes = data[data.keys()[0]]["episodes"]
+            for episode in episodes:
+                self._episodeList[show][(episode['season'],
+                                   episode['number'])] = episode['name']
+
+            return True
+        return False
