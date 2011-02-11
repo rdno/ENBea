@@ -59,17 +59,29 @@ class enbea(QMainWindow):
         self.parser = EpisodeParser()
     def _setupEpisodeList(self):
         self.episodeFiles = []
+        self.episodeInfos = []
         self.model = EpisodeTableModel(self.episodeFiles)
         self.ui.episodeList.setModel(self.model)
         self.ui.episodeList.setColumnWidth(0, 200)
         self.ui.episodeList.setColumnWidth(1, 200)
+        self.ui.episodeList.setSelectionBehavior(QAbstractItemView.SelectRows)
+        self.connect(self.ui.episodeList.selectionModel(),
+                SIGNAL('selectionChanged(QItemSelection,QItemSelection)'),
+                self.episodeSelected);
+    def episodeSelected(self):
+        indexes = self.ui.episodeList.selectionModel().selectedIndexes()
+        if len(indexes) > 0:
+            row = indexes[0].row()
+            self.ui.showName.setText(self.episodeInfos[row][0])
+        else:
+            self.ui.showName.setText("")
     def openFileDialog(self):
         fullname = QFileDialog.getOpenFileName(self, 'Open file',
                     '~')
         filename = path.basename(str(fullname))
         dirname = path.dirname(str(fullname))
-        print self.parser.parse(filename)
         self.model.add(filename, dirname)
+        self.episodeInfos.append(self.parser.parse(filename))
 
 
 if __name__ == "__main__":
