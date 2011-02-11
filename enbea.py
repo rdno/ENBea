@@ -72,6 +72,7 @@ class enbea(QMainWindow):
         self.connect(self.api_parser.downloader,
                      SIGNAL('downloadProgress(int)'),
                      self.updateDownloadProgress)
+        self.ui.nameMask.setText("%season%episode - %name")
     def updateDownloadProgress(self, bytes):
         self.ui.progressBar.setValue(bytes)
     def startDownloadProgress(self, total, show):
@@ -109,6 +110,14 @@ class enbea(QMainWindow):
         if info[0]:
             self.shows.add(info[0])
             self.api_parser.addShow(info[0])
+    def newname(self, info):
+        name = self.ui.nameMask.text()
+        name = name.replace("%season",  info[1])
+        name = name.replace("%episode",  info[2])
+        name = name.replace("%show",  info[0])
+        name = name.replace("%name",
+                            self.api_parser.getEpisodeName(info))
+        return name
     def showNotFound(self):
         self.ui.progressBar.hide()
         self.ui.infoLabel.setText("Show list couldn't be parsed")
@@ -118,7 +127,7 @@ class enbea(QMainWindow):
         mod = self.model
         for row in range(mod.rowCount()):
             index = mod.index(row, 1)
-            mod.setData(index, self.api_parser.getEpisodeName(self.episodeInfos[row]))
+            mod.setData(index, self.newname(self.episodeInfos[row]))
 
 if __name__ == "__main__":
     app = QApplication(sys.argv)
