@@ -4,7 +4,7 @@ import sys
 from os import path
 from PyQt4.QtCore import *
 from PyQt4.QtGui import *
-from parser import EpisodeParser
+from parsers import EpisodeParser
 from main_ui import Ui_main
 
 class EpisodeTableModel(QAbstractTableModel):
