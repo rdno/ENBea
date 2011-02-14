@@ -96,28 +96,26 @@ class enbea(QMainWindow):
         indexes = self.ui.episodeList.selectionModel().selectedIndexes()
         if len(indexes) > 0:
             row = indexes[0].row()
-            self.ui.showName.setText(self.episodeInfos[row][0])
+            self.ui.showName.setText(self.episodeInfos[row]['show'])
         else:
             self.ui.showName.setText("")
     def openFileDialog(self):
         fullname = QFileDialog.getOpenFileName(self, 'Open file',
                     '~')
-        filename = path.basename(str(fullname))
-        dirname = path.dirname(str(fullname))
-        info = self.parser.parse(filename)
-        self.model.add(filename, '')
+        info = self.parser.parse(str(fullname))
+        self.model.add(info['filename'], '')
         self.episodeInfos.append(info)
-        if info[0]:
-            self.shows.add(info[0])
-            self.api_parser.addShow(info[0])
+        if info:
+            self.shows.add(info['show'])
+            self.api_parser.addShow(info['show'])
     def newname(self, info):
         name = self.ui.nameMask.text()
-        name = name.replace("%season",  info[1])
-        name = name.replace("%episode",  info[2])
-        name = name.replace("%show",  info[0])
+        name = name.replace("%season",  info['season'])
+        name = name.replace("%episode",  info['episode'])
+        name = name.replace("%show",  info['show'])
         name = name.replace("%name",
                             self.api_parser.getEpisodeName(info))
-        return name
+        return name + "." + info["extension"]
     def showNotFound(self):
         self.ui.progressBar.hide()
         self.ui.infoLabel.setText("Show list couldn't be parsed")

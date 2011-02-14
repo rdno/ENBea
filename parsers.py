@@ -3,6 +3,7 @@ import json
 import re
 import urllib
 import urllib2
+from os import path
 from PyQt4.QtCore import QObject
 from PyQt4.QtCore import QThread
 from PyQt4.QtCore import SIGNAL
@@ -20,22 +21,27 @@ class EpisodeParser(object):
             # ex: Show.Name.S01E01...
             re.compile('(?P<showname>.+)\.S(?P<season>\d+)E(?P<episode>\d+)')
             ]
-    def parse(self, filename):
+    def parse(self, fullname):
         """main parse function
         returns (Show Name, Season No, Episode No)
 
         Arguments:
-        - `filename`: file name
+        - `fullname`: /path/to/file
         """
+        filename = path.basename(fullname)
+        dirname = path.dirname(fullname)
+        extension = filename.split(".")[-1]
         for exp in self._parser_exps:
             match = exp.match(filename)
             if match:
-                return (camelCase(match.group('showname').replace('.', ' ')),
-                        match.group('season'),
-                        match.group('episode'))
-
+                return {'show':camelCase(match.group('showname').replace('.', ' ')),
+                        'season':match.group('season'),
+                        'episode':match.group('episode'),
+                        'filename':filename,
+                        'dir':dirname,
+                        'extension':extension}
         #if it doesn't match anything
-        return ('', 0, 0)
+        return {}
 class IMDbApiParser(QObject):
     """IMDbApi Parser (http://imdbapi.poromenos.org/)"""
     def __init__(self):
@@ -49,10 +55,10 @@ class IMDbApiParser(QObject):
     def getEpisodeList(self, show):
         return self._episodeList[show]
     def getEpisodeName(self, episodeInfo):
-        show = episodeInfo[0]
-        season = int(episodeInfo[1])
-        episode = int(episodeInfo[2])
-        if show:
+        if episodeInfo:
+            show = episodeInfo['show']
+            season = int(episodeInfo['season'])
+            episode = int(episodeInfo['episode'])
             return self._episodeList[show][(season, episode)]
         return ""
     def getShowList(self):
@@ -110,25 +116,3 @@ class EListDownloader(QThread):
             if not chunk:
                 break
         return bytes, data
-def chunk_report(bytes_so_far, chunk_size, total_size):
-   percent = float(bytes_so_far) / total_size
-   percent = round(percent*100, 2)
-   print "Downloaded %d of %d bytes (%0.2f%%)" % (bytes_so_far, total_size, percent)
-
-def chunk_read(response, chunk_size=1024, report_hook=None):
-    total_size = response.info().getheader('Content-Length').strip()
-    total_size = int(total_size)
-    bytes_so_far = 0
-    chunks = ""
-    while 1:
-        chunk = response.read(chunk_size)
-        bytes_so_far += len(chunk)
-        chunks += chunk
-
-        if not chunk:
-            break
-
-        if report_hook:
-            report_hook(bytes_so_far, chunk_size, total_size)
-
-    return bytes_so_far, chunks
