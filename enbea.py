@@ -7,6 +7,7 @@ from PyQt4.QtGui import *
 from parsers import EpisodeParser
 from parsers import IMDbApiParser
 from main_ui import Ui_main
+from utils import renameFile
 
 class EpisodeTableModel(QAbstractTableModel):
     """Episode Table Model"""
@@ -23,7 +24,7 @@ class EpisodeTableModel(QAbstractTableModel):
         if orientation == Qt.Horizontal and role == Qt.DisplayRole:
             return QVariant(self.header_data[col])
         return QVariant()
-    def data(self, index, role):
+    def data(self, index, role=Qt.DisplayRole):
         if not index.isValid():
             return QVariant()
         elif role != Qt.DisplayRole:
@@ -56,6 +57,8 @@ class enbea(QMainWindow):
 
         self.connect(self.ui.browseBtn,
                      SIGNAL('clicked()'), self.openFileDialog)
+        self.connect(self.ui.renameBtn,
+                     SIGNAL('clicked()'), self.renameAll)
         self._setupEpisodeList()
         self.parser = EpisodeParser()
         self.api_parser = IMDbApiParser()
@@ -73,6 +76,20 @@ class enbea(QMainWindow):
                      SIGNAL('downloadProgress(int)'),
                      self.updateDownloadProgress)
         self.ui.nameMask.setText("%season%episode - %name")
+    def renameAll(self):
+        mod = self.model
+        for row in range(mod.rowCount()):
+            newname = str(mod.data(mod.index(row, 1)).toString())
+            if newname:
+                oldname = str(mod.data(mod.index(row, 0)).toString())
+                done = renameFile(self.episodeInfos[row]['dir'],
+                                oldname, newname)
+                if done:
+                    self.ui.infoLabel.setText("Renamed %s to %s." \
+                                                 % (oldname, newname))
+                else:
+                    self.ui.infoLabel.setText("Couldn't renamed %s." \
+                                                  % oldname)
     def updateDownloadProgress(self, bytes):
         self.ui.progressBar.setValue(bytes)
     def startDownloadProgress(self, total, show):
@@ -105,13 +122,13 @@ class enbea(QMainWindow):
         info = self.parser.parse(str(fullname))
         self.model.add(info['filename'], '')
         self.episodeInfos.append(info)
-        if info:
+        if info['show']:
             self.shows.add(info['show'])
             self.api_parser.addShow(info['show'])
     def newname(self, info):
         name = self.ui.nameMask.text()
-        name = name.replace("%season",  info['season'])
-        name = name.replace("%episode",  info['episode'])
+        name = name.replace("%season",  str(info['season']))
+        name = name.replace("%episode",  str(info['episode']).zfill(2))
         name = name.replace("%show",  info['show'])
         name = name.replace("%name",
                             self.api_parser.getEpisodeName(info))

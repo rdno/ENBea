@@ -35,13 +35,18 @@ class EpisodeParser(object):
             match = exp.match(filename)
             if match:
                 return {'show':camelCase(match.group('showname').replace('.', ' ')),
-                        'season':match.group('season'),
-                        'episode':match.group('episode'),
+                        'season':int(match.group('season')),
+                        'episode':int(match.group('episode')),
                         'filename':filename,
                         'dir':dirname,
                         'extension':extension}
         #if it doesn't match anything
-        return {}
+        return {'filename':filename,
+                'dir':dirname,
+                'extension':extension,
+                'show':'',
+                'season':0,
+                'episode':0}
 class IMDbApiParser(QObject):
     """IMDbApi Parser (http://imdbapi.poromenos.org/)"""
     def __init__(self):
@@ -55,7 +60,7 @@ class IMDbApiParser(QObject):
     def getEpisodeList(self, show):
         return self._episodeList[show]
     def getEpisodeName(self, episodeInfo):
-        if episodeInfo:
+        if episodeInfo['show']:
             show = episodeInfo['show']
             season = int(episodeInfo['season'])
             episode = int(episodeInfo['episode'])
