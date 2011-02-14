@@ -27,6 +27,11 @@ class EpisodeTableModel(QAbstractTableModel):
     def data(self, index, role=Qt.DisplayRole):
         if not index.isValid():
             return QVariant()
+        elif role == Qt.TextColorRole:
+            if self.data(self.index(index.row(), 1)) == "":
+                return QVariant(QColor(Qt.red))
+            else:
+                return QVariant()
         elif role != Qt.DisplayRole:
             return QVariant()
         return QVariant(self.table_data[index.row()][index.column()])
@@ -132,6 +137,8 @@ class enbea(QMainWindow):
             self.shows.add(info['show'])
             self.api_parser.addShow(info['show'])
     def newname(self, info):
+        if info['show'] == '':
+            return ""
         name = self.ui.nameMask.text()
         name = name.replace("%season",  str(info['season']))
         name = name.replace("%episode",  str(info['episode']).zfill(2))
