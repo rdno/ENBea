@@ -70,6 +70,9 @@ class enbea(QMainWindow):
         self.ui.progressBar.hide()
         self.ui.infoLabel.setText("Add files")
         self.connect(self.api_parser.downloader,
+                     SIGNAL('AddedToQueue(QString)'),
+                     self.addedToQueue)
+        self.connect(self.api_parser.downloader,
                      SIGNAL('downloadStarted(int, QString)'),
                      self.startDownloadProgress)
         self.connect(self.api_parser.downloader,
@@ -90,6 +93,9 @@ class enbea(QMainWindow):
                 else:
                     self.ui.infoLabel.setText("Couldn't renamed %s." \
                                                   % oldname)
+    def addedToQueue(self, show):
+        self.ui.infoLabel.setText("%s list added to download queue." \
+                                      % show)
     def updateDownloadProgress(self, bytes):
         self.ui.progressBar.setValue(bytes)
     def startDownloadProgress(self, total, show):

@@ -99,6 +99,7 @@ class EListDownloader(QThread):
     def run(self):
         while self._queue:
             show = self._queue.pop(0)
+            self.emit(SIGNAL('AddedToQueue(QString)'), show)
             response = urllib2.urlopen(self.geturl(show))
             bytes, data = self.chunk_read(response, show)
             data = json.loads(data)
