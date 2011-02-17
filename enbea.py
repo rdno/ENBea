@@ -73,9 +73,12 @@ class enbea(QMainWindow):
                      SIGNAL('clicked()'), self.openFileDialog)
         self.connect(self.ui.renameBtn,
                      SIGNAL('clicked()'), self.renameAll)
+        #ui stuff (lineEdits)
+        self.connect(self.ui.nameMask,
+                     SIGNAL('textEdited(QString)'), self.updateNewNames)
         #Show state signals
         self.connect(self.api_parser, SIGNAL('ShowListUpdated()'),
-                     self.updateNewNames)
+                     self.showFound)
         self.connect(self.api_parser, SIGNAL('ShowNotFound()'),
                      self.showNotFound)
         #EList download signals
@@ -159,9 +162,11 @@ class enbea(QMainWindow):
     def showNotFound(self):
         self.ui.progressBar.hide()
         self.ui.infoLabel.setText("Show list couldn't be parsed")
-    def updateNewNames(self):
+    def showFound(self):
         self.ui.progressBar.hide()
         self.ui.infoLabel.setText("Download Successful!")
+        self.updateNewNames()
+    def updateNewNames(self):
         mod = self.model
         for row in range(mod.rowCount()):
             index = mod.index(row, 1)
