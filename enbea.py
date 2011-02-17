@@ -71,7 +71,7 @@ class enbea(QMainWindow):
                      self.updateNewNames)
         self.connect(self.api_parser, SIGNAL('ShowNotFound()'),
                      self.showNotFound)
-
+        self.ui.showProperties.hide()
         self.ui.progressBar.hide()
         self.ui.infoLabel.setText("Add files")
         self.connect(self.api_parser.downloader,
@@ -124,9 +124,15 @@ class enbea(QMainWindow):
         indexes = self.ui.episodeList.selectionModel().selectedIndexes()
         if len(indexes) > 0:
             row = indexes[0].row()
+            self.ui.showProperties.show()
             self.ui.showName.setText(self.episodeInfos[row]['show'])
+            self.ui.seasonNo.setText(str(self.episodeInfos[row]['season']))
+            self.ui.episodeNo.setText(str(self.episodeInfos[row]['episode']))
         else:
+            self.ui.showProperties.hide()
             self.ui.showName.setText("")
+            self.ui.seasonNo.setText("")
+            self.ui.episodeNo.setText("")
     def openFileDialog(self):
         fullname = QFileDialog.getOpenFileName(self, 'Open file',
                     '~')
