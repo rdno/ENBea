@@ -186,6 +186,7 @@ class enbea(QMainWindow):
             return ""
         name = self.ui.nameMask.text()
         name = name.replace("%season",  str(info['season']))
+        name = name.replace("%Season",  str(info['season']).zfill(2))
         name = name.replace("%episode",  str(info['episode']).zfill(2))
         name = name.replace("%show",  info['show'])
         name = name.replace("%name", episodeName)
