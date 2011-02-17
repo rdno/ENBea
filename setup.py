@@ -40,9 +40,10 @@ class Tags(Command):
 
 
 setup(name="ENBea",
-      version="0.1pre",
+      version="0.1",
       description="An episode renamer using IMDb API",
       author=unicode("Rıdvan Örsvuran"),
+      author_email='flasherdn@gmail.com',
       license='GPL',
       packages=['enbea'],
       scripts=['enbea.py'],
