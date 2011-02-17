@@ -8,6 +8,8 @@ from enbea.parsers import EpisodeParser
 from enbea.parsers import IMDbApiParser
 from enbea.ui_main import Ui_main
 from enbea.utils import renameFile
+from enbea.utils import get_video_file_filter
+from enbea.utils import get_videos
 
 class EpisodeTableModel(QAbstractTableModel):
     """Episode Table Model"""
@@ -70,8 +72,10 @@ class enbea(QMainWindow):
         self.connect_signals()
     def connect_signals(self):
         #ui stuff (buttons)
-        self.connect(self.ui.browseBtn,
+        self.connect(self.ui.addFileBtn,
                      SIGNAL('clicked()'), self.openFileDialog)
+        self.connect(self.ui.addFolderBtn,
+                     SIGNAL('clicked()'), self.openFolderDialog)
         self.connect(self.ui.renameBtn,
                      SIGNAL('clicked()'), self.renameAll)
         #ui stuff (lineEdits)
@@ -175,16 +179,23 @@ class enbea(QMainWindow):
             self.ui.seasonNo.setText("")
             self.ui.episodeNo.setText("")
             self.ui.showName.setPlaceholderText("")
+    def addFile(self, fullname):
+        info = self.parser.parse(str(fullname))
+        self.model.add(info['filename'], '')
+        self.episodeInfos.append(info)
+        if info['show']:
+            self.shows.add(info['show'])
+            self.api_parser.addShow(info['show'])
     def openFileDialog(self):
         fullnames = QFileDialog.getOpenFileNames(self, 'Open file',
-                    '~', filter='Video Files (*.avi *.mp4 *.mkv);;All Files (*)')
+                    '~', filter=get_video_file_filter()+';;All Files (*)')
         for fullname in fullnames:
-            info = self.parser.parse(str(fullname))
-            self.model.add(info['filename'], '')
-            self.episodeInfos.append(info)
-            if info['show']:
-                self.shows.add(info['show'])
-                self.api_parser.addShow(info['show'])
+            self.addFile(fullname)
+    def openFolderDialog(self):
+        dirname = QFileDialog.getExistingDirectory(self, 'Select folder',
+                                                   '~')
+        for video in get_videos(str(dirname)):
+            self.addFile(video)
     def newname(self, info):
         if info['show'] == '' or info['season'] == 0 or \
                 info['episode'] == 0:
