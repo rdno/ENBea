@@ -1,0 +1,22 @@
+ENBea (Episode Name Beautifier)
+
+
+It's a simple program that renames TV episode files using IMDb API
+(http://imdbapi.poromenos.org/). It parses filenames for finding show
+names and episode numbers. So mostly after you add your files to the
+list, it downloads episode list for shows and write new filenames
+using filemask. If show name can't be found. You need to set yourself.
+
+Available file masks strings:
+	  %show -> Show Name
+	  %season -> season
+	  %Season -> two digit season (for shows have more than 9 seasons
+	  	     ex: 01
+	  %episode -> two digit episode number
+	  %name -> episode name
+
+It's written in PyQt (Python 2.7, PyQt 4.8.1).
+To run enbea first you need to compile ui files using:
+   $ python setup.py compileui
+After you done that you can start the program:
+   $ python enbea.py
