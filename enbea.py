@@ -59,21 +59,26 @@ class enbea(QMainWindow):
         self.ui.setupUi(myWidget)
 	self.setCentralWidget(myWidget)
         self.setWindowTitle("ENBea")
-
+        self._setupEpisodeList()
+        self.parser = EpisodeParser()
+        self.api_parser = IMDbApiParser()
+        self.ui.showProperties.hide()
+        self.ui.progressBar.hide()
+        self.ui.infoLabel.setText("Add files")
+        self.ui.nameMask.setText("%season%episode - %name")
+        self.connect_signals()
+    def connect_signals(self):
+        #ui stuff (buttons)
         self.connect(self.ui.browseBtn,
                      SIGNAL('clicked()'), self.openFileDialog)
         self.connect(self.ui.renameBtn,
                      SIGNAL('clicked()'), self.renameAll)
-        self._setupEpisodeList()
-        self.parser = EpisodeParser()
-        self.api_parser = IMDbApiParser()
+        #Show state signals
         self.connect(self.api_parser, SIGNAL('ShowListUpdated()'),
                      self.updateNewNames)
         self.connect(self.api_parser, SIGNAL('ShowNotFound()'),
                      self.showNotFound)
-        self.ui.showProperties.hide()
-        self.ui.progressBar.hide()
-        self.ui.infoLabel.setText("Add files")
+        #EList download signals
         self.connect(self.api_parser.downloader,
                      SIGNAL('AddedToQueue(QString)'),
                      self.addedToQueue)
@@ -83,7 +88,6 @@ class enbea(QMainWindow):
         self.connect(self.api_parser.downloader,
                      SIGNAL('downloadProgress(int)'),
                      self.updateDownloadProgress)
-        self.ui.nameMask.setText("%season%episode - %name")
     def renameAll(self):
         mod = self.model
         for row in range(mod.rowCount()):
