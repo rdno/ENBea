@@ -2,3 +2,6 @@
 *~
 ui_*.py
 TAGS
+MANIFEST
+build/*
+dist/*
