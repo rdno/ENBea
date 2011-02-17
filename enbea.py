@@ -66,6 +66,7 @@ class enbea(QMainWindow):
         self.ui.progressBar.hide()
         self.ui.infoLabel.setText("Add files")
         self.ui.nameMask.setText("%season%episode - %name")
+        self.selectedRows = []
         self.connect_signals()
     def connect_signals(self):
         #ui stuff (buttons)
@@ -76,6 +77,8 @@ class enbea(QMainWindow):
         #ui stuff (lineEdits)
         self.connect(self.ui.nameMask,
                      SIGNAL('textEdited(QString)'), self.updateNewNames)
+        self.connect(self.ui.showName,
+                     SIGNAL('editingFinished()'), self.showInfoChanged)
         #Show state signals
         self.connect(self.api_parser, SIGNAL('ShowListUpdated()'),
                      self.showFound)
@@ -127,14 +130,31 @@ class enbea(QMainWindow):
         self.connect(self.ui.episodeList.selectionModel(),
                 SIGNAL('selectionChanged(QItemSelection,QItemSelection)'),
                 self.episodeSelected);
+    def showInfoChanged(self):
+        for row in self.selectedRows:
+            show = str(self.ui.showName.text())
+            self.episodeInfos[row]['show'] = show
+            self.api_parser.addShow(show)
+            print row, show
+            #TODO: season and episode no change
     def episodeSelected(self):
         indexes = self.ui.episodeList.selectionModel().selectedIndexes()
-        if len(indexes) > 0:
+        if len(indexes) == 2: #one row contains two columns
             row = indexes[0].row()
+            self.selectedRows = [row]
             self.ui.showProperties.show()
+            self.ui.showName.setDisabled(False)
+            self.ui.seasonNo.setDisabled(False)
+            self.ui.episodeNo.setDisabled(False)
             self.ui.showName.setText(self.episodeInfos[row]['show'])
             self.ui.seasonNo.setText(str(self.episodeInfos[row]['season']))
             self.ui.episodeNo.setText(str(self.episodeInfos[row]['episode']))
+        elif len(indexes) > 2:
+            #TODO:support for multiple edit
+            self.ui.showProperties.show()
+            self.ui.showName.setDisabled(True)
+            self.ui.seasonNo.setDisabled(True)
+            self.ui.episodeNo.setDisabled(True)
         else:
             self.ui.showProperties.hide()
             self.ui.showName.setText("")
