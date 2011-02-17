@@ -19,8 +19,13 @@ class EpisodeParser(object):
         self._options = options
         self._parser_exps = [
             # ex: Show.Name.S01E01...
-            re.compile('(?P<showname>.+)\.S(?P<season>\d+)E(?P<episode>\d+)')
+            re.compile('(?P<showname>.+)\.S(?P<season>\d+)E(?P<episode>\d+)', re.IGNORECASE)
             ]
+        self._episode_only_exps = [
+            #ex: S01E01
+            re.compile('.*S(?P<season>\d+)E(?P<episode>\d+).*', re.IGNORECASE),
+            #ex: 01x01
+            re.compile('.*(?P<season>\d+)x(?P<episode>\d+).*')]
     def parse(self, fullname):
         """main parse function
         returns (Show Name, Season No, Episode No)
@@ -35,6 +40,16 @@ class EpisodeParser(object):
             match = exp.match(filename)
             if match:
                 return {'show':camelCase(match.group('showname').replace('.', ' ')),
+                        'season':int(match.group('season')),
+                        'episode':int(match.group('episode')),
+                        'filename':filename,
+                        'dir':dirname,
+                        'extension':extension}
+        #if showname couldn't found try season & episode no only
+        for exp in self._episode_only_exps:
+            match = exp.match(filename)
+            if match:
+                return {'show':'',
                         'season':int(match.group('season')),
                         'episode':int(match.group('episode')),
                         'filename':filename,
