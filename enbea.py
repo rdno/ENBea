@@ -154,13 +154,19 @@ class enbea(QMainWindow):
             self.ui.showName.setDisabled(False)
             self.ui.seasonNo.setDisabled(False)
             self.ui.episodeNo.setDisabled(False)
+            self.ui.showName.setPlaceholderText("")
             self.ui.showName.setText(self.episodeInfos[row]['show'])
             self.ui.seasonNo.setText(str(self.episodeInfos[row]['season']))
             self.ui.episodeNo.setText(str(self.episodeInfos[row]['episode']))
         elif len(indexes) > 2:
-            #TODO:support for multiple edit
+            for index in indexes:
+                self.selectedRows.append(index.row())
+            self.selectRows = set(self.selectedRows)
+            firstRow = indexes[0].row()
             self.ui.showProperties.show()
-            self.ui.showName.setDisabled(True)
+            self.ui.showName.setPlaceholderText("Multiple Edit is on")
+            self.ui.showName.setText("")
+            self.ui.showName.setDisabled(False)
             self.ui.seasonNo.setDisabled(True)
             self.ui.episodeNo.setDisabled(True)
         else:
@@ -168,6 +174,7 @@ class enbea(QMainWindow):
             self.ui.showName.setText("")
             self.ui.seasonNo.setText("")
             self.ui.episodeNo.setText("")
+            self.ui.showName.setPlaceholderText("")
     def openFileDialog(self):
         fullname = QFileDialog.getOpenFileName(self, 'Open file',
                     '~')
