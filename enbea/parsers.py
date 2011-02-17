@@ -108,15 +108,15 @@ class EListDownloader(QThread):
     """Episode List Downloader"""
     def __init__(self):
         QThread.__init__(self)
-        self._queue = []
+        self._queue = set()
         self.url = 'http://imdbapi.poromenos.org/js/'
     def geturl(self, show):
         return self.url + '?'+ urllib.urlencode({'name':show})
     def addToQueue(self, show):
-        self._queue.append(show)
+        self._queue.add(show.lower())
     def run(self):
         while self._queue:
-            show = self._queue.pop(0)
+            show = self._queue.pop()
             self.emit(SIGNAL('AddedToQueue(QString)'), show)
             response = urllib2.urlopen(self.geturl(show))
             bytes, data = self.chunk_read(response, show)
