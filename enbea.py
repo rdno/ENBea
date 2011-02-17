@@ -176,14 +176,15 @@ class enbea(QMainWindow):
             self.ui.episodeNo.setText("")
             self.ui.showName.setPlaceholderText("")
     def openFileDialog(self):
-        fullname = QFileDialog.getOpenFileName(self, 'Open file',
-                    '~')
-        info = self.parser.parse(str(fullname))
-        self.model.add(info['filename'], '')
-        self.episodeInfos.append(info)
-        if info['show']:
-            self.shows.add(info['show'])
-            self.api_parser.addShow(info['show'])
+        fullnames = QFileDialog.getOpenFileNames(self, 'Open file',
+                    '~', filter='Video Files (*.avi *.mp4 *.mkv);;All Files (*)')
+        for fullname in fullnames:
+            info = self.parser.parse(str(fullname))
+            self.model.add(info['filename'], '')
+            self.episodeInfos.append(info)
+            if info['show']:
+                self.shows.add(info['show'])
+                self.api_parser.addShow(info['show'])
     def newname(self, info):
         if info['show'] == '' or info['season'] == 0 or \
                 info['episode'] == 0:
