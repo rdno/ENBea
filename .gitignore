@@ -1,4 +1,4 @@
 *.pyc
 *~
-*_ui.py
+ui_*.py
 TAGS

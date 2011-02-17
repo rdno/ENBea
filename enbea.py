@@ -4,10 +4,10 @@ import sys
 from os import path
 from PyQt4.QtCore import *
 from PyQt4.QtGui import *
-from parsers import EpisodeParser
-from parsers import IMDbApiParser
-from main_ui import Ui_main
-from utils import renameFile
+from enbea.parsers import EpisodeParser
+from enbea.parsers import IMDbApiParser
+from enbea.ui_main import Ui_main
+from enbea.utils import renameFile
 
 class EpisodeTableModel(QAbstractTableModel):
     """Episode Table Model"""
