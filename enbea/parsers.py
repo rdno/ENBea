@@ -19,7 +19,9 @@ class EpisodeParser(object):
         self._options = options
         self._parser_exps = [
             # ex: Show.Name.S01E01...
-            re.compile('(?P<showname>.+)\.S(?P<season>\d+)E(?P<episode>\d+)', re.IGNORECASE)
+            re.compile('(?P<showname>.+)\.S(?P<season>\d+)E(?P<episode>\d+)', re.IGNORECASE),
+            # ex: Show Name - 01x01
+            re.compile('(?P<showname>.+)[\s\-]+(?P<season>\d+)x(?P<episode>\d+)')
             ]
         self._episode_only_exps = [
             #ex: S01E01
@@ -113,7 +115,7 @@ class EListDownloader(QThread):
     def geturl(self, show):
         return self.url + '?'+ urllib.urlencode({'name':show})
     def addToQueue(self, show):
-        self._queue.add(show.lower())
+        self._queue.add(camelCase(show))
     def run(self):
         while self._queue:
             show = self._queue.pop()
