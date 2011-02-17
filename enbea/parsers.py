@@ -60,11 +60,14 @@ class IMDbApiParser(QObject):
     def getEpisodeList(self, show):
         return self._episodeList[show]
     def getEpisodeName(self, episodeInfo):
-        if episodeInfo['show']:
-            show = episodeInfo['show']
-            season = int(episodeInfo['season'])
-            episode = int(episodeInfo['episode'])
-            return self._episodeList[show][(season, episode)]
+        try:
+            if episodeInfo['show']:
+                show = episodeInfo['show']
+                season = int(episodeInfo['season'])
+                episode = int(episodeInfo['episode'])
+                return self._episodeList[show][(season, episode)]
+        except KeyError:
+            return ""
         return ""
     def getShowList(self):
         return self._episodeList.keys()

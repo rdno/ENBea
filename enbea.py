@@ -79,6 +79,10 @@ class enbea(QMainWindow):
                      SIGNAL('textEdited(QString)'), self.updateNewNames)
         self.connect(self.ui.showName,
                      SIGNAL('editingFinished()'), self.showInfoChanged)
+        self.connect(self.ui.seasonNo,
+                     SIGNAL('editingFinished()'), self.showInfoChanged)
+        self.connect(self.ui.episodeNo,
+                     SIGNAL('editingFinished()'), self.showInfoChanged)
         #Show state signals
         self.connect(self.api_parser, SIGNAL('ShowListUpdated()'),
                      self.showFound)
@@ -131,12 +135,16 @@ class enbea(QMainWindow):
                 SIGNAL('selectionChanged(QItemSelection,QItemSelection)'),
                 self.episodeSelected);
     def showInfoChanged(self):
+        show = str(self.ui.showName.text())
+        season = int(self.ui.seasonNo.text())
+        episode = int(self.ui.episodeNo.text())
         for row in self.selectedRows:
-            show = str(self.ui.showName.text())
             self.episodeInfos[row]['show'] = show
             self.api_parser.addShow(show)
-            print row, show
-            #TODO: season and episode no change
+            if self.ui.seasonNo.isEnabled():
+                self.episodeInfos[row]['season'] = season
+                self.episodeInfos[row]['episode'] = episode
+        self.updateNewNames()
     def episodeSelected(self):
         indexes = self.ui.episodeList.selectionModel().selectedIndexes()
         if len(indexes) == 2: #one row contains two columns
@@ -170,15 +178,18 @@ class enbea(QMainWindow):
             self.shows.add(info['show'])
             self.api_parser.addShow(info['show'])
     def newname(self, info):
-        if info['show'] == '':
+        if info['show'] == '' or info['season'] == 0 or \
+                info['episode'] == 0:
+            return ""
+        episodeName = self.api_parser.getEpisodeName(info)
+        if episodeName == '':
             return ""
         name = self.ui.nameMask.text()
         name = name.replace("%season",  str(info['season']))
         name = name.replace("%episode",  str(info['episode']).zfill(2))
         name = name.replace("%show",  info['show'])
-        name = name.replace("%name",
-                            self.api_parser.getEpisodeName(info))
-        return name + "." + info["extension"]
+        name = name.replace("%name", episodeName)
+        return name + "." + info['extension']
     def showNotFound(self):
         self.ui.progressBar.hide()
         self.ui.infoLabel.setText("Show list couldn't be parsed")
