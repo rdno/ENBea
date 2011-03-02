@@ -61,3 +61,10 @@ def get_videos(directory):
                 if fnmatch.fnmatch(basename, '*.'+ext):
                     filename = os.path.join(root, basename)
                     yield filename
+
+def is_a_video_file(name):
+    ext = os.path.splitext(name)[1]
+    for video_ext in consts.VIDEO_EXTS:
+        if ext == "." + video_ext:
+            return True
+    return False

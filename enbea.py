@@ -10,6 +10,7 @@ from enbea.ui_main import Ui_main
 from enbea.utils import rename_file
 from enbea.utils import get_video_file_filter
 from enbea.utils import get_videos
+from enbea.utils import is_a_video_file
 from enbea.translation import i18n
 
 class EpisodeTableModel(QAbstractTableModel):
@@ -139,6 +140,23 @@ class enbea(QMainWindow):
         self.connect(self.ui.episodeList.selectionModel(),
                 SIGNAL('selectionChanged(QItemSelection,QItemSelection)'),
                 self.episodeSelected);
+        self.ui.episodeList.__class__.dragEnterEvent = self.dragEnterEvent
+        self.ui.episodeList.__class__.dragMoveEvent = self.dragEnterEvent
+        self.ui.episodeList.__class__.dropEvent = self.drop
+        self.ui.episodeList.setAcceptDrops(True)
+    def dragEnterEvent(self, event):
+        if event.mimeData().hasFormat("text/plain"):
+            event.accept()
+        else:
+            event.ignore()
+    def drop(self, event):
+        name=unicode(event.mimeData().text()).replace('file://', '')
+        if path.isdir(name):
+            for video in get_videos(name):
+                self.addFile(video)
+        elif is_a_video_file(name):
+            self.addFile(name)
+
     def showInfoChanged(self):
         show = str(self.ui.showName.text())
         season = int(self.ui.seasonNo.text())
