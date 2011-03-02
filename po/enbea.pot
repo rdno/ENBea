@@ -1,0 +1,132 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the PACKAGE package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: PACKAGE VERSION\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2011-03-02 21:28+0200\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"Language: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=CHARSET\n"
+"Content-Transfer-Encoding: 8bit\n"
+
+#: enbea/utils.py:30
+msgid "Video Files"
+msgstr ""
+
+#: enbea/ui_main.py:133
+msgid "Add File"
+msgstr ""
+
+#: enbea/ui_main.py:134
+msgid "Add Folder"
+msgstr ""
+
+#: enbea/ui_main.py:135
+msgid "Show Name:"
+msgstr ""
+
+#: enbea/ui_main.py:136
+msgid "Season:"
+msgstr ""
+
+#: enbea/ui_main.py:137
+msgid "Episode:"
+msgstr ""
+
+#: enbea/ui_main.py:138
+msgid "Name mask:"
+msgstr ""
+
+#: enbea/ui_main.py:139
+msgid "Rename"
+msgstr ""
+
+#: enbea.py:21
+msgid "Original Name"
+msgstr ""
+
+#: enbea.py:21
+msgid "New Name"
+msgstr ""
+
+#: enbea.py:70
+msgid "Add files"
+msgstr ""
+
+#: enbea.py:71
+msgid "%season%episode - %name"
+msgstr ""
+
+#: enbea.py:115
+msgid "Renamed {0} to {1}"
+msgstr ""
+
+#: enbea.py:118
+#, python-format
+msgid "Couldn't renamed %s."
+msgstr ""
+
+#: enbea.py:121
+#, python-format
+msgid "%s list added to download queue."
+msgstr ""
+
+#: enbea.py:126
+#, python-format
+msgid "Downloading %s episode list"
+msgstr ""
+
+#: enbea.py:172
+msgid "Multiple Edit is on"
+msgstr ""
+
+#: enbea.py:191
+msgid "Open file"
+msgstr ""
+
+#: enbea.py:193
+msgid "All Files"
+msgstr ""
+
+#: enbea.py:197
+msgid "Select folder"
+msgstr ""
+
+#: enbea.py:209
+#, python-format
+msgid "%season"
+msgstr ""
+
+#: enbea.py:210
+msgid "%Season"
+msgstr ""
+
+#: enbea.py:211
+#, python-format
+msgid "%episode"
+msgstr ""
+
+#: enbea.py:212
+#, python-format
+msgid "%show"
+msgstr ""
+
+#: enbea.py:213
+msgid "%name"
+msgstr ""
+
+#: enbea.py:217
+msgid "Show list couldn't be parsed"
+msgstr ""
+
+#: enbea.py:220
+msgid "Download Successful!"
+msgstr ""

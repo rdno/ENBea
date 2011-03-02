@@ -10,6 +10,7 @@ from enbea.ui_main import Ui_main
 from enbea.utils import renameFile
 from enbea.utils import get_video_file_filter
 from enbea.utils import get_videos
+from enbea.translation import i18n
 
 class EpisodeTableModel(QAbstractTableModel):
     """Episode Table Model"""
@@ -17,7 +18,7 @@ class EpisodeTableModel(QAbstractTableModel):
         """init"""
         QAbstractTableModel.__init__(self, parent, *args)
         self.table_data = table_data
-        self.header_data = ['Original Name', 'New Name']
+        self.header_data = [i18n('Original Name'), i18n('New Name')]
     def rowCount(self, parent=QModelIndex()):
         return len(self.table_data)
     def columnCount(self,  parent=QModelIndex()):
@@ -66,8 +67,8 @@ class enbea(QMainWindow):
         self.api_parser = IMDbApiParser()
         self.ui.showProperties.hide()
         self.ui.progressBar.hide()
-        self.ui.infoLabel.setText("Add files")
-        self.ui.nameMask.setText("%season%episode - %name")
+        self.ui.infoLabel.setText(i18n("Add files"))
+        self.ui.nameMask.setText(i18n("%season%episode - %name"))
         self.selectedRows = []
         self.connect_signals()
     def connect_signals(self):
@@ -111,18 +112,18 @@ class enbea(QMainWindow):
                 done = renameFile(self.episodeInfos[row]['dir'],
                                 oldname, newname)
                 if done:
-                    self.ui.infoLabel.setText("Renamed %s to %s." \
+                    self.ui.infoLabel.setText(i18n("Renamed {0} to {1}") \
                                                  % (oldname, newname))
                 else:
-                    self.ui.infoLabel.setText("Couldn't renamed %s." \
+                    self.ui.infoLabel.setText(i18n("Couldn't renamed %s.") \
                                                   % oldname)
     def addedToQueue(self, show):
-        self.ui.infoLabel.setText("%s list added to download queue." \
+        self.ui.infoLabel.setText(i18n("%s list added to download queue.") \
                                       % show)
     def updateDownloadProgress(self, bytes):
         self.ui.progressBar.setValue(bytes)
     def startDownloadProgress(self, total, show):
-        self.ui.infoLabel.setText("Downloading %s episode list" % show)
+        self.ui.infoLabel.setText(i18n("Downloading %s episode list") % show)
         self.ui.progressBar.setMinimum(0)
         self.ui.progressBar.setMaximum(total)
         self.ui.progressBar.show()
@@ -168,7 +169,7 @@ class enbea(QMainWindow):
             self.selectRows = set(self.selectedRows)
             firstRow = indexes[0].row()
             self.ui.showProperties.show()
-            self.ui.showName.setPlaceholderText("Multiple Edit is on")
+            self.ui.showName.setPlaceholderText(i18n("Multiple Edit is on"))
             self.ui.showName.setText("")
             self.ui.showName.setDisabled(False)
             self.ui.seasonNo.setDisabled(True)
@@ -187,12 +188,13 @@ class enbea(QMainWindow):
             self.shows.add(info['show'])
             self.api_parser.addShow(info['show'])
     def openFileDialog(self):
-        fullnames = QFileDialog.getOpenFileNames(self, 'Open file',
-                    '~', filter=get_video_file_filter()+';;All Files (*)')
+        fullnames = QFileDialog.getOpenFileNames(self, i18n("Open file"),
+                    '~', filter=get_video_file_filter()
+                                + ";;"+i18n("All Files")+" (*)")
         for fullname in fullnames:
             self.addFile(fullname)
     def openFolderDialog(self):
-        dirname = QFileDialog.getExistingDirectory(self, 'Select folder',
+        dirname = QFileDialog.getExistingDirectory(self, i18n("Select folder"),
                                                    '~')
         for video in get_videos(str(dirname)):
             self.addFile(video)
@@ -204,18 +206,18 @@ class enbea(QMainWindow):
         if episodeName == '':
             return ""
         name = self.ui.nameMask.text()
-        name = name.replace("%season",  str(info['season']))
-        name = name.replace("%Season",  str(info['season']).zfill(2))
-        name = name.replace("%episode",  str(info['episode']).zfill(2))
-        name = name.replace("%show",  info['show'])
-        name = name.replace("%name", episodeName)
+        name = name.replace(i18n("%season"),  str(info['season']))
+        name = name.replace(i18n("%Season"),  str(info['season']).zfill(2))
+        name = name.replace(i18n("%episode"),  str(info['episode']).zfill(2))
+        name = name.replace(i18n("%show"),  info['show'])
+        name = name.replace(i18n("%name"), episodeName)
         return name + "." + info['extension']
     def showNotFound(self):
         self.ui.progressBar.hide()
-        self.ui.infoLabel.setText("Show list couldn't be parsed")
+        self.ui.infoLabel.setText(i18n("Show list couldn't be parsed"))
     def showFound(self):
         self.ui.progressBar.hide()
-        self.ui.infoLabel.setText("Download Successful!")
+        self.ui.infoLabel.setText(i18n("Download Successful!"))
         self.updateNewNames()
     def updateNewNames(self):
         mod = self.model

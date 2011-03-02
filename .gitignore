@@ -1,7 +1,9 @@
 *.pyc
 *~
 ui_*.py
+*#
 TAGS
 MANIFEST
 build/*
 dist/*
+locale/*

@@ -4,7 +4,7 @@ import re
 import os
 
 from enbea import consts
-
+from enbea.translation import i18n
 
 def camelCase(name):
     s1 = name.lower()
@@ -27,7 +27,7 @@ def renameFile(dirname, oldname, newname, test=False):
             return False
 def get_video_file_filter():
     """returns video file filter for QFileDialog"""
-    filter_ = 'Video Files ('
+    filter_ = i18n("Video Files")+' ('
     for ext in consts.VIDEO_EXTS:
         filter_ += ' *.'+ext
     filter_+= ")"
