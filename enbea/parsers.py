@@ -7,7 +7,7 @@ from os import path
 from PyQt4.QtCore import QObject
 from PyQt4.QtCore import QThread
 from PyQt4.QtCore import SIGNAL
-from utils import camelCase
+from utils import camel_case
 
 class EpisodeParser(object):
     """Episode Parser"""
@@ -41,7 +41,7 @@ class EpisodeParser(object):
         for exp in self._parser_exps:
             match = exp.match(filename)
             if match:
-                return {'show':camelCase(match.group('showname').replace('.', ' ')),
+                return {'show':camel_case(match.group('showname').replace('.', ' ')),
                         'season':int(match.group('season')),
                         'episode':int(match.group('episode')),
                         'filename':filename,
@@ -115,7 +115,7 @@ class EListDownloader(QThread):
     def geturl(self, show):
         return self.url + '?'+ urllib.urlencode({'name':show})
     def addToQueue(self, show):
-        self._queue.add(camelCase(show))
+        self._queue.add(camel_case(show))
     def run(self):
         while self._queue:
             show = self._queue.pop()

@@ -7,7 +7,7 @@ from PyQt4.QtGui import *
 from enbea.parsers import EpisodeParser
 from enbea.parsers import IMDbApiParser
 from enbea.ui_main import Ui_main
-from enbea.utils import renameFile
+from enbea.utils import rename_file
 from enbea.utils import get_video_file_filter
 from enbea.utils import get_videos
 from enbea.translation import i18n
@@ -109,7 +109,7 @@ class enbea(QMainWindow):
             newname = str(mod.data(mod.index(row, 1)).toString())
             if newname:
                 oldname = str(mod.data(mod.index(row, 0)).toString())
-                done = renameFile(self.episodeInfos[row]['dir'],
+                done = rename_file(self.episodeInfos[row]['dir'],
                                 oldname, newname)
                 if done:
                     self.ui.infoLabel.setText(i18n("Renamed {0} to {1}") \

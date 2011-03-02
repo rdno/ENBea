@@ -1,37 +1,56 @@
 # -*- coding: utf-8 -*-
 import fnmatch
+import glob
 import re
 import os
 
 from enbea import consts
 from enbea.translation import i18n
 
-def camelCase(name):
+def camel_case(name):
     s1 = name.lower()
-    return re.sub('(^| |\.)([a-z])', upperTheGroup, s1)
+    return re.sub('(^| |\.)([a-z])', upper_the_group, s1)
 
-def upperTheGroup(match):
+def upper_the_group(match):
     if match:
         return match.group(0).upper()
 
-def renameFile(dirname, oldname, newname, test=False):
-    oldname = os.path.join(dirname, oldname)
-    newname = os.path.join(dirname, newname)
+def rename_file(dirname, oldname, newname, test=False):
+    foldname = os.path.join(dirname, oldname)
+    fnewname = os.path.join(dirname, newname)
     if test:
-        return (oldname, newname)
+        return (foldname, fnewname)
     else:
         try:
-            os.rename(oldname, newname)
+            os.rename(foldname, fnewname)
+            rename_subtitles(dirname, oldname, newname)
             return True
         except:
             return False
+def rename_subtitles(dirname, oldname, newname):
+    fx = fix_square_bracket_issue
+    oldbasename = os.path.splitext(oldname)[0]
+    newbasename = os.path.splitext(newname)[0]
+    foldbasename =  os.path.join(dirname, oldbasename)
+    subtitles = []
+    for ext in consts.SUBTITLE_EXTS:
+        subtitles.extend(glob.glob(fx(foldbasename)+"*"+ext))
+    for subtitle in subtitles:
+        os.rename(subtitle, subtitle.replace(oldbasename, newbasename))
+
+def fix_square_bracket_issue(name):
+    """fix [] issue"""
+    return re.sub("\[(.*)\]",
+                  lambda x:"[[]"+x.group(1)+"]",
+                  name)
+
+
 def get_video_file_filter():
     """returns video file filter for QFileDialog"""
     filter_ = i18n("Video Files")+' ('
     for ext in consts.VIDEO_EXTS:
         filter_ += ' *.'+ext
     filter_+= ")"
-    print filter_
     return filter_
 
 def get_videos(directory):
