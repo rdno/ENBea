@@ -7,10 +7,12 @@ from PyQt4.QtGui import *
 from enbea.parsers import EpisodeParser
 from enbea.parsers import IMDbApiParser
 from enbea.ui_main import Ui_main
-from enbea.utils import rename_file
+from enbea.utils import get_links
 from enbea.utils import get_video_file_filter
 from enbea.utils import get_videos
 from enbea.utils import is_a_video_file
+from enbea.utils import rename_file
+from enbea.utils import set_drag_and_drop_events
 from enbea.translation import i18n
 
 class EpisodeTableModel(QAbstractTableModel):
@@ -140,22 +142,14 @@ class enbea(QMainWindow):
         self.connect(self.ui.episodeList.selectionModel(),
                 SIGNAL('selectionChanged(QItemSelection,QItemSelection)'),
                 self.episodeSelected);
-        self.ui.episodeList.__class__.dragEnterEvent = self.dragEnterEvent
-        self.ui.episodeList.__class__.dragMoveEvent = self.dragEnterEvent
-        self.ui.episodeList.__class__.dropEvent = self.drop
-        self.ui.episodeList.setAcceptDrops(True)
-    def dragEnterEvent(self, event):
-        if event.mimeData().hasFormat("text/plain"):
-            event.accept()
-        else:
-            event.ignore()
+        set_drag_and_drop_events(self.ui.episodeList, self.drop)
     def drop(self, event):
-        name=unicode(event.mimeData().text()).replace('file://', '')
-        if path.isdir(name):
-            for video in get_videos(name):
-                self.addFile(video)
-        elif is_a_video_file(name):
-            self.addFile(name)
+        for link in get_links(event.mimeData()):
+            if path.isdir(link):
+                for video in get_videos(link):
+                    self.addFile(video)
+            elif is_a_video_file(link):
+                self.addFile(link)
 
     def showInfoChanged(self):
         show = str(self.ui.showName.text())

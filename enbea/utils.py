@@ -68,3 +68,24 @@ def is_a_video_file(name):
         if ext == "." + video_ext:
             return True
     return False
+
+def set_drag_and_drop_events(list, drop):
+    """for setting episodeList object's drag&drop events"""
+    def dragEnterEvent(self, event):
+        if event.mimeData().hasText() or \
+            event.mimeData().hasUrls():
+            event.accept()
+        else:
+            event.ignore()
+    list.__class__.dragEnterEvent = dragEnterEvent
+    list.__class__.dragMoveEvent = dragEnterEvent
+    list.__class__.dropEvent = drop
+    list.setAcceptDrops(True)
+
+def get_links(mimeData):
+    if mimeData.hasText():
+        return [unicode(mimeData.text()).replace('file://', '')]
+    elif mimeData.hasUrls():
+        # windows
+        return map(lambda u:unicode(u.toString()).replace('file:///', ''),
+                   mimeData.urls())
