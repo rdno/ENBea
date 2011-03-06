@@ -2,6 +2,8 @@
 # -*- coding: utf-8 -*-
 import glob
 import os
+if os.name == 'nt':
+    import py2exe
 
 from distutils.core import setup
 from distutils.cmd import Command
@@ -12,11 +14,7 @@ def compile_ui():
         os.system('pyuic4 -o enbea/ui_%s.py ui/%s -g %s' % \
                       (filename.split('.')[0], filename,
                        'enbea'))
-def compile_ui_windows():
-    for filename in glob.glob1('ui', '*.ui'):
-        os.system('pyuic4 -o enbea/ui_%s.py ui/%s' % \
-                      (filename.split('.')[0], filename))
-
+ 
 def generate_pot():
     infile = 'po/POTFILES.in'
     files = os.popen("find . -name '*.py'").read().strip().split("\n")
@@ -55,7 +53,6 @@ class Mo(MultiPlatformCommand):
     def run_posix(self):
         generate_mo()
 
-
 class Pot(MultiPlatformCommand):
     def run_posix(self):
         generate_pot()
@@ -64,6 +61,7 @@ class UICompile(MultiPlatformCommand):
     def run_posix(self):
         compile_ui()
     def run_win(self):
+        from setup_win import compile_ui_windows
         compile_ui_windows()
 
 class Clean(clean):
@@ -78,7 +76,11 @@ class Tags(MultiPlatformCommand):
     def run(self):
         os.system('etags *.py enbea/*.py')
 
-
+if os.name == 'nt':
+    from setup_win import options
+    extra_options = options
+else:
+    extra_options = {}
 setup(name="ENBea",
       version="0.1",
       description="An episode renamer using IMDb API",
@@ -91,5 +93,6 @@ setup(name="ENBea",
                   'clean':Clean,
                   'tags':Tags,
                   'pot':Pot,
-                  'mo':Mo}
+                  'mo':Mo},
+      **extra_options
       )
