@@ -12,6 +12,10 @@ def compile_ui():
         os.system('pyuic4 -o enbea/ui_%s.py ui/%s -g %s' % \
                       (filename.split('.')[0], filename,
                        'enbea'))
+def compile_ui_windows():
+    for filename in glob.glob1('ui', '*.ui'):
+        os.system('pyuic4 -o enbea/ui_%s.py ui/%s' % \
+                      (filename.split('.')[0], filename))
 
 def generate_pot():
     infile = 'po/POTFILES.in'
@@ -30,58 +34,55 @@ def generate_mo():
         os.system("msgfmt --output-file=locale/%s/LC_MESSAGES/%s.mo po/%s" \
                       % (lang.split('.')[0], 'enbea', lang))
 
-class Mo(Command):
+                      
+class MultiPlatformCommand(Command):
     user_options = []
     def initialize_options(self):
         pass
     def finalize_options(self):
         pass
     def run(self):
+        if os.name == 'posix':
+            self.run_linux()
+        elif os.name == 'nt':
+            self.run_win()
+    def run_posix(self):
+        pass
+    def run_win(self):
+        print "Your os suck!"
+
+class Mo(MultiPlatformCommand):
+    def run_posix(self):
         generate_mo()
 
 
-class Pot(Command):
-    user_options = []
-    def initialize_options(self):
-        pass
-    def finalize_options(self):
-        pass
-    def run(self):
+class Pot(MultiPlatformCommand):
+    def run_posix(self):
         generate_pot()
 
-
-
-class UICompile(Command):
-    user_options = []
-    def initialize_options(self):
-        pass
-    def finalize_options(self):
-        pass
-    def run(self):
+class UICompile(MultiPlatformCommand):
+    def run_posix(self):
         compile_ui()
+    def run_win(self):
+        compile_ui_windows()
 
 class Clean(clean):
     def run(self):
-        os.system('find . -name *.pyc | xargs rm -rvf')
-        os.system('find . -name *~ | xargs rm -rvf')
-        clean.run(self)
+        if not os.name == 'nt':
+            os.system('find . -name *.pyc | xargs rm -rvf')
+            os.system('find . -name *~ | xargs rm -rvf')
+            clean.run(self)
 
-class Tags(Command):
+class Tags(MultiPlatformCommand):
     """Command for creating emacs TAGS file"""
-    user_options = []
-    def initialize_options(self):
-        pass
-    def finalize_options(self):
-        pass
     def run(self):
         os.system('etags *.py enbea/*.py')
-
 
 
 setup(name="ENBea",
       version="0.1",
       description="An episode renamer using IMDb API",
-      author=unicode("Rıdvan Örsvuran"),
+      author=u"Rıdvan Örsvuran",
       author_email='flasherdn@gmail.com',
       license='GPL',
       packages=['enbea'],
