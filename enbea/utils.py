@@ -84,7 +84,8 @@ def set_drag_and_drop_events(list, drop):
 
 def get_links(mimeData):
     if mimeData.hasText():
-        return [unicode(mimeData.text()).replace('file://', '')]
+        return map(lambda t:unicode(t).replace('file://', ''),
+                   mimeData.text().split('\n'))
     elif mimeData.hasUrls():
         # windows
         return map(lambda u:unicode(u.toString()).replace('file:///', ''),
