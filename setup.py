@@ -41,7 +41,7 @@ class MultiPlatformCommand(Command):
         pass
     def run(self):
         if os.name == 'posix':
-            self.run_linux()
+            self.run_posix()
         elif os.name == 'nt':
             self.run_win()
     def run_posix(self):
