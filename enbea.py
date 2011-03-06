@@ -109,9 +109,9 @@ class enbea(QMainWindow):
     def renameAll(self):
         mod = self.model
         for row in range(mod.rowCount()):
-            newname = str(mod.data(mod.index(row, 1)).toString())
+            newname = unicode(mod.data(mod.index(row, 1)).toString())
             if newname:
-                oldname = str(mod.data(mod.index(row, 0)).toString())
+                oldname = unicode(mod.data(mod.index(row, 0)).toString())
                 done = rename_file(self.episodeInfos[row]['dir'],
                                 oldname, newname)
                 if done:
@@ -152,7 +152,7 @@ class enbea(QMainWindow):
                 self.addFile(link)
 
     def showInfoChanged(self):
-        show = str(self.ui.showName.text())
+        show = unicode(self.ui.showName.text())
         season = int(self.ui.seasonNo.text())
         episode = int(self.ui.episodeNo.text())
         for row in self.selectedRows:
@@ -173,8 +173,8 @@ class enbea(QMainWindow):
             self.ui.episodeNo.setDisabled(False)
             self.ui.showName.setPlaceholderText("")
             self.ui.showName.setText(self.episodeInfos[row]['show'])
-            self.ui.seasonNo.setText(str(self.episodeInfos[row]['season']))
-            self.ui.episodeNo.setText(str(self.episodeInfos[row]['episode']))
+            self.ui.seasonNo.setText(unicode(self.episodeInfos[row]['season']))
+            self.ui.episodeNo.setText(unicode(self.episodeInfos[row]['episode']))
         elif len(indexes) > 2:
             for index in indexes:
                 self.selectedRows.append(index.row())
@@ -193,7 +193,7 @@ class enbea(QMainWindow):
             self.ui.episodeNo.setText("")
             self.ui.showName.setPlaceholderText("")
     def addFile(self, fullname):
-        info = self.parser.parse(str(fullname))
+        info = self.parser.parse(unicode(fullname))
         self.model.add(info['filename'], '')
         self.episodeInfos.append(info)
         if info['show']:
@@ -208,7 +208,7 @@ class enbea(QMainWindow):
     def openFolderDialog(self):
         dirname = QFileDialog.getExistingDirectory(self, i18n("Select folder"),
                                                    '~')
-        for video in get_videos(str(dirname)):
+        for video in get_videos(unicode(dirname)):
             self.addFile(video)
     def newname(self, info):
         if info['show'] == '' or info['season'] == 0 or \
@@ -218,9 +218,9 @@ class enbea(QMainWindow):
         if episodeName == '':
             return ""
         name = self.ui.nameMask.text()
-        name = name.replace(i18n("%season"),  str(info['season']))
-        name = name.replace(i18n("%Season"),  str(info['season']).zfill(2))
-        name = name.replace(i18n("%episode"),  str(info['episode']).zfill(2))
+        name = name.replace(i18n("%season"),  unicode(info['season']))
+        name = name.replace(i18n("%Season"),  unicode(info['season']).zfill(2))
+        name = name.replace(i18n("%episode"),  unicode(info['episode']).zfill(2))
         name = name.replace(i18n("%show"),  info['show'])
         name = name.replace(i18n("%name"), episodeName)
         return name + "." + info['extension']

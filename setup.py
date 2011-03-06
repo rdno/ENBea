@@ -82,7 +82,7 @@ if os.name == 'nt':
 else:
     extra_options = {}
 setup(name="ENBea",
-      version="0.1",
+      version="0.2",
       description="An episode renamer using IMDb API",
       author=u"Rıdvan Örsvuran",
       author_email='flasherdn@gmail.com',
