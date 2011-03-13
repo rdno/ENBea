@@ -8,125 +8,124 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2011-03-02 21:28+0200\n"
+"POT-Creation-Date: 2011-03-13 13:44+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
-"Language: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=CHARSET\n"
 "Content-Transfer-Encoding: 8bit\n"
 
-#: enbea/utils.py:30
-msgid "Video Files"
-msgstr ""
-
-#: enbea/ui_main.py:133
-msgid "Add File"
-msgstr ""
-
-#: enbea/ui_main.py:134
-msgid "Add Folder"
-msgstr ""
-
-#: enbea/ui_main.py:135
-msgid "Show Name:"
-msgstr ""
-
-#: enbea/ui_main.py:136
-msgid "Season:"
-msgstr ""
-
-#: enbea/ui_main.py:137
-msgid "Episode:"
-msgstr ""
-
-#: enbea/ui_main.py:138
-msgid "Name mask:"
-msgstr ""
-
-#: enbea/ui_main.py:139
-msgid "Rename"
-msgstr ""
-
-#: enbea.py:21
+#: .\enbea.py:24
 msgid "Original Name"
 msgstr ""
 
-#: enbea.py:21
+#: .\enbea.py:24
 msgid "New Name"
 msgstr ""
 
-#: enbea.py:70
+#: .\enbea.py:73
 msgid "Add files"
 msgstr ""
 
-#: enbea.py:71
+#: .\enbea.py:74
 msgid "%season%episode - %name"
 msgstr ""
 
-#: enbea.py:115
+#: .\enbea.py:118
 msgid "Renamed {0} to {1}"
 msgstr ""
 
-#: enbea.py:118
-#, python-format
+#: .\enbea.py:121
+#, possible-python-format
 msgid "Couldn't renamed %s."
 msgstr ""
 
-#: enbea.py:121
-#, python-format
+#: .\enbea.py:124
+#, possible-python-format
 msgid "%s list added to download queue."
 msgstr ""
 
-#: enbea.py:126
-#, python-format
+#: .\enbea.py:129
+#, possible-python-format
 msgid "Downloading %s episode list"
 msgstr ""
 
-#: enbea.py:172
+#: .\enbea.py:184
 msgid "Multiple Edit is on"
 msgstr ""
 
-#: enbea.py:191
+#: .\enbea.py:203
 msgid "Open file"
 msgstr ""
 
-#: enbea.py:193
+#: .\enbea.py:205
 msgid "All Files"
 msgstr ""
 
-#: enbea.py:197
+#: .\enbea.py:209
 msgid "Select folder"
 msgstr ""
 
-#: enbea.py:209
-#, python-format
+#: .\enbea.py:221
+#, possible-python-format
 msgid "%season"
 msgstr ""
 
-#: enbea.py:210
+#: .\enbea.py:222
 msgid "%Season"
 msgstr ""
 
-#: enbea.py:211
-#, python-format
+#: .\enbea.py:223
+#, possible-python-format
 msgid "%episode"
 msgstr ""
 
-#: enbea.py:212
-#, python-format
+#: .\enbea.py:224
+#, possible-python-format
 msgid "%show"
 msgstr ""
 
-#: enbea.py:213
+#: .\enbea.py:225
 msgid "%name"
 msgstr ""
 
-#: enbea.py:217
+#: .\enbea.py:229
 msgid "Show list couldn't be parsed"
 msgstr ""
 
-#: enbea.py:220
+#: .\enbea.py:232
 msgid "Download Successful!"
+msgstr ""
+
+#: .\enbea\ui_main.py:131
+msgid "Add File"
+msgstr ""
+
+#: .\enbea\ui_main.py:132
+msgid "Add Folder"
+msgstr ""
+
+#: .\enbea\ui_main.py:133
+msgid "Show Name:"
+msgstr ""
+
+#: .\enbea\ui_main.py:134
+msgid "Season:"
+msgstr ""
+
+#: .\enbea\ui_main.py:135
+msgid "Episode:"
+msgstr ""
+
+#: .\enbea\ui_main.py:136
+msgid "Name mask:"
+msgstr ""
+
+#: .\enbea\ui_main.py:137
+msgid "Rename"
+msgstr ""
+
+#: .\enbea\utils.py:50
+msgid "Video Files"
 msgstr ""

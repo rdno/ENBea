@@ -2,8 +2,10 @@
 *~
 ui_*.py
 *#
+*.exe
 TAGS
 MANIFEST
+POTFILES.in
 build/*
 dist/*
 locale/*

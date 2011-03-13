@@ -1,8 +1,0 @@
-./enbea/consts.py
-./enbea/translation.py
-./enbea/utils.py
-./enbea/ui_main.py
-./enbea/__init__.py
-./enbea/parsers.py
-./setup.py
-./enbea.py

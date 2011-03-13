@@ -52,10 +52,16 @@ class MultiPlatformCommand(Command):
 class Mo(MultiPlatformCommand):
     def run_posix(self):
         generate_mo()
+    def run_win(self):
+        from setup_win import generate_mo_windows
+        generate_mo_windows()
 
 class Pot(MultiPlatformCommand):
     def run_posix(self):
         generate_pot()
+    def run_win(self):
+        from setup_win import generate_pot_windows
+        generate_pot_windows()
 
 class UICompile(MultiPlatformCommand):
     def run_posix(self):
@@ -73,12 +79,21 @@ class Clean(clean):
 
 class Tags(MultiPlatformCommand):
     """Command for creating emacs TAGS file"""
-    def run(self):
+    def run_posix(self):
         os.system('etags *.py enbea/*.py')
+
+        
+cmdclasses = {'compileui':UICompile,
+              'clean':Clean,
+              'tags':Tags,
+              'pot':Pot,
+              'mo':Mo}
 
 if os.name == 'nt':
     from setup_win import options
+    from setup_win import cmdclass_win
     extra_options = options
+    cmdclasses.update(cmdclass_win)
 else:
     extra_options = {}
 setup(name="ENBea",
@@ -89,10 +104,6 @@ setup(name="ENBea",
       license='GPL',
       packages=['enbea'],
       scripts=['enbea.py'],
-      cmdclass = {'compileui':UICompile,
-                  'clean':Clean,
-                  'tags':Tags,
-                  'pot':Pot,
-                  'mo':Mo},
+      cmdclass = cmdclasses,
       **extra_options
       )
