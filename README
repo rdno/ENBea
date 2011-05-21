@@ -20,3 +20,20 @@ To run enbea first you need to compile ui files using:
    $ python setup.py compileui
 After you done that you can start the program:
    $ python enbea.py
+
+Windows:
+
+On Windows translation supported using "Helper for gettext.py on Windows"
+(https://launchpad.net/gettext-py-windows) and you need gettext for win32
+to compile po files.
+It's written in PyQt (Python 2.7, PyQt 4.8.1).
+To run enbea first you need to compile ui files using:
+   > python setup.py compileui
+Compile translations using:
+   > python setup.py mo
+After you done that you can start the program:
+   > python enbea.py
+To compile to exe:
+    > python setup.py py2exe
+To make a NSIS installer:
+    > python setup.py makeinstaller

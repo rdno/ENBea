@@ -58,8 +58,9 @@ class MakeInstaller(Command):
         pass
     def run(self):
         os.system('mkdir dist\\locale')
-        os.system('xcopy /E locale dist\\locale')
+        os.system('xcopy /E /Y /Q locale dist\\locale')
         make_nsis_installer()
+        os.system("makensis.exe /X\"SetCompressor /SOLID lzma\" win-installer.nsi")
 
 def generate_mo_windows():
     for lang in glob.glob1("po", "*.po"):
